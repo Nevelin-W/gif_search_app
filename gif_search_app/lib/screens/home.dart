@@ -11,8 +11,11 @@ class HomeSceen extends StatefulWidget {
 }
 
 class _HomeSceenState extends State<HomeSceen> {
+  TextEditingController searchController = TextEditingController();
   List<dynamic> gifs = [];
-  String searchTerm = '';
+  String searchTerm = 'cat';
+  int page = 0;
+  int limit = 20;
 
   @override
   void initState() {
@@ -21,17 +24,36 @@ class _HomeSceenState extends State<HomeSceen> {
   }
 
   void _startingGifs() {
-    _fetchGifs('cat').then((result) {
+    _fetchGifs(searchTerm, page, limit).then((result) {
+      setState(() {
+        gifs = result;
+        page++;
+      });
+    });
+  }
+
+  void _searchGifs() {
+    setState(() {
+      gifs = [];
+      page = 0;
+    });
+    _fetchGifs(searchController.text, page++, limit).then((result) {
       setState(() {
         gifs = result;
       });
     });
   }
 
-  Future<List<dynamic>> _fetchGifs(String searchTerm) async {
+  Future<List<dynamic>> _fetchGifs(
+    String searchTerm,
+    int page,
+    int limit,
+  ) async {
     final response = await http.get(Uri.parse(
-        'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=20'));
+        'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${page * limit}'));
 
+    /* print(jsonDecode(response.body)['pagination']);
+    print(page); */
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['data'];
     } else {
@@ -39,21 +61,12 @@ class _HomeSceenState extends State<HomeSceen> {
     }
   }
 
-  void _searchGifs() {
-    setState(() {
-      gifs = [];
-    });
-    _fetchGifs(searchTerm).then((result) {
-      setState(() {
-        gifs = result;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.scrim,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         centerTitle: true,
         title: Text(
           'Gif Search',
@@ -65,33 +78,42 @@ class _HomeSceenState extends State<HomeSceen> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   height: 45.0,
                   child: SearchBar(
+                    controller: searchController,
                     hintText: 'Search',
                     onChanged: (value) {
-                      searchTerm = value;
-                    },
-                    onSubmitted: (value) {
                       searchTerm = value;
                       _searchGifs();
                     },
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.search, size: 30.0),
-                  onPressed: _searchGifs,
                 ),
               ],
             ),
           ),
         ),
       ),
-      body: Gifs(
-        gifs: gifs,
-      ),
+      body: gifs.isEmpty
+          ? Center(
+              heightFactor: 20,
+              child: Text(
+                'Try searching for something!',
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+              ),
+            )
+          : Gifs(
+              gifs: gifs,
+              searchTerm: searchTerm,
+              fetchGifs: _fetchGifs,
+              limit: limit,
+              page: page,
+            ),
     );
   }
 }

@@ -30,8 +30,10 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         textTheme: GoogleFonts.poppinsTextTheme().apply(),
+        
         /* scaffoldBackgroundColor: const Color.fromARGB(255, 50, 58, 60), */
       ),
+      
       home: const HomeSceen(),
     );
   }
