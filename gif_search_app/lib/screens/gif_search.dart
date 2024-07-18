@@ -22,7 +22,6 @@ class _GifSearchScreenState extends State<GifSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.scrim,
       body: widget.gifs.isEmpty
           ? Center(
               heightFactor: 20,

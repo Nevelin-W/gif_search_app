@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+//dependencies
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class GifItem extends StatelessWidget {
+//providers
+import 'package:gif_search_app/providers/favorites.dart';
+
+class GifItem extends ConsumerWidget {
   final dynamic gif;
 
   const GifItem({
@@ -9,7 +14,9 @@ class GifItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favoritesNotifier = ref.watch(favoritesNotifierProvider.notifier);
+    final isFavorite = ref.watch(favoritesNotifierProvider).contains(gif);
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 3.0, right: 3.0),
       child: GridTile(
@@ -20,11 +27,15 @@ class GifItem extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomRight,
               child: IconButton(
-                icon: const Icon(Icons
-                    .favorite_outline), // Use an appropriate icon for theme change
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_outline,
+                ),
                 onPressed: () {
-                  // Implement theme change logic here
-                  // You can toggle between dark and light themes
+                  if (isFavorite) {
+                    favoritesNotifier.removeFavorite(gif);
+                  } else {
+                    favoritesNotifier.addFavorite(gif);
+                  }
                 },
               ),
             ),
