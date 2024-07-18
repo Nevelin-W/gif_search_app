@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//widgets
-import 'package:gif_search_app/widgets/gifs.dart';
+//screens
+import 'package:gif_search_app/screens/gif_search.dart';
+import 'package:gif_search_app/screens/favorites.dart';
 
-class HomeSceen extends StatefulWidget {
-  const HomeSceen({super.key});
+class TabsScreen extends StatefulWidget {
+  const TabsScreen({super.key});
   @override
-  State<HomeSceen> createState() => _HomeSceenState();
+  State<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _HomeSceenState extends State<HomeSceen> {
+class _TabsScreenState extends State<TabsScreen> {
+  int _selectedIndex = 0; // Initially set to Gif Search screen
   TextEditingController searchController = TextEditingController();
   List<dynamic> gifs = [];
   String searchTerm = 'cat';
   int page = 0;
   int limit = 20;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -51,9 +58,8 @@ class _HomeSceenState extends State<HomeSceen> {
   ) async {
     final response = await http.get(Uri.parse(
         'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${page * limit}'));
-
-    /* print(jsonDecode(response.body)['pagination']);
-    print(page); */
+    print(jsonDecode(response.body)['pagination']);
+    print(page);
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['data'];
     } else {
@@ -61,20 +67,52 @@ class _HomeSceenState extends State<HomeSceen> {
     }
   }
 
+  void _loadMoreGifs() {
+    _fetchGifs(searchTerm, page, limit).then((result) {
+      setState(() {
+        gifs.addAll(result);
+        page++;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var activePageTitle = 'Gif Search';
+    Widget activePage = GifSearchScreen(
+      gifs: gifs,
+      searchController: searchController,
+      loadMoreGifs: _loadMoreGifs,
+      searchGifs: _searchGifs,
+    );
+
+    if (_selectedIndex == 1) {
+      activePageTitle = 'Favorites';
+      activePage = const FavoritesScreen();
+    }
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.scrim,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        centerTitle: true,
         title: Text(
-          'Gif Search',
+          activePageTitle,
           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
               color: Theme.of(context).colorScheme.onPrimaryContainer),
         ),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        elevation: 10,
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons
+                .lightbulb_outline_rounded), // Use an appropriate icon for theme change
+            onPressed: () {
+              // Implement theme change logic here
+              // You can toggle between dark and light themes
+            },
+          ),
+        ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56.0),
+          preferredSize: const Size.fromHeight(45),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -97,23 +135,21 @@ class _HomeSceenState extends State<HomeSceen> {
           ),
         ),
       ),
-      body: gifs.isEmpty
-          ? Center(
-              heightFactor: 20,
-              child: Text(
-                'Try searching for something!',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-              ),
-            )
-          : Gifs(
-              gifs: gifs,
-              searchTerm: searchTerm,
-              fetchGifs: _fetchGifs,
-              limit: limit,
-              page: page,
-            ),
+      body: activePage,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
