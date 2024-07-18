@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+//dependencies
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+//providers
+import 'package:gif_search_app/providers/theme.dart';
 //screens
 import 'package:gif_search_app/screens/gif_search.dart';
 import 'package:gif_search_app/screens/favorites.dart';
@@ -102,12 +106,14 @@ class _TabsScreenState extends State<TabsScreen> {
         elevation: 10,
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons
-                .lightbulb_outline_rounded), // Use an appropriate icon for theme change
-            onPressed: () {
-              // Implement theme change logic here
-              // You can toggle between dark and light themes
+          Consumer(
+            builder: (context, ref, _) {
+              return IconButton(
+                icon: const Icon(Icons.lightbulb_outline_rounded),
+                onPressed: () {
+                  ref.read(themeNotifierProvider.notifier).toggleTheme();
+                },
+              );
             },
           ),
         ],
@@ -137,6 +143,10 @@ class _TabsScreenState extends State<TabsScreen> {
       ),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        unselectedItemColor: Theme.of(context).colorScheme.onPrimaryFixed,
+        showUnselectedLabels: false,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
