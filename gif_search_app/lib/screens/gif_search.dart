@@ -21,21 +21,20 @@ class GifSearchScreen extends StatefulWidget {
 class _GifSearchScreenState extends State<GifSearchScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: widget.gifs.isEmpty
-          ? Center(
-              heightFactor: 20,
-              child: Text(
-                'Try searching for something!',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-              ),
-            )
-          : Gifs(
-              gifs: widget.gifs,
-              fetchGifs: widget.loadMoreGifs,
+    return widget.gifs.isEmpty
+        ? Center(
+            heightFactor: 30,
+            child: Text(
+              'Try searching for something!',
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
             ),
-    );
+          )
+        : Gifs(
+            gifs: widget.gifs,
+            fetchGifs: widget.loadMoreGifs,
+          );
+    /*  */
   }
 }

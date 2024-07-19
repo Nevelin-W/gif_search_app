@@ -8,6 +8,8 @@ import 'package:gif_search_app/providers/theme.dart';
 //screens
 import 'package:gif_search_app/screens/gif_search.dart';
 import 'package:gif_search_app/screens/favorites.dart';
+//widgets
+import 'package:gif_search_app/widgets/container_decoration.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -16,7 +18,8 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int _selectedIndex = 0; // Initially set to Gif Search screen
+  int _selectedIndex = 0;
+
   TextEditingController searchController = TextEditingController();
   List<dynamic> gifs = [];
   String searchTerm = 'cat';
@@ -127,25 +130,27 @@ class _TabsScreenState extends State<TabsScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: 45.0,
-                  child: SearchBar(
-                    controller: searchController,
-                    hintText: 'Search',
-                    onChanged: (value) {
-                      searchTerm = value;
-                      _searchGifs();
-                    },
-                  ),
+                  child: _selectedIndex == 0
+                      ? SearchBar(
+                          controller: searchController,
+                          hintText: 'Search',
+                          onChanged: (value) {
+                            searchTerm = value;
+                            _searchGifs();
+                          },
+                        )
+                      : Container(),
                 ),
               ],
             ),
           ),
         ),
       ),
-      body: activePage,
+      body: DecoratedContainer(child: activePage),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        unselectedItemColor: Theme.of(context).colorScheme.onPrimaryFixed,
+        unselectedItemColor: Theme.of(context).colorScheme.secondary,
         showUnselectedLabels: false,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
