@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 //widgets
 import 'package:gif_search_app/widgets/gifs.dart';
 
-class GifSearchScreen extends StatefulWidget {
+class GifSearchScreen extends StatelessWidget {
   const GifSearchScreen({
     super.key,
     required this.gifs,
@@ -14,14 +14,10 @@ class GifSearchScreen extends StatefulWidget {
   final TextEditingController searchController;
   final VoidCallback loadMoreGifs;
   final VoidCallback searchGifs;
-  @override
-  State<GifSearchScreen> createState() => _GifSearchScreenState();
-}
 
-class _GifSearchScreenState extends State<GifSearchScreen> {
   @override
   Widget build(BuildContext context) {
-    return widget.gifs.isEmpty
+    return gifs.isEmpty
         ? Center(
             heightFactor: 30,
             child: Text(
@@ -32,9 +28,8 @@ class _GifSearchScreenState extends State<GifSearchScreen> {
             ),
           )
         : Gifs(
-            gifs: widget.gifs,
-            fetchGifs: widget.loadMoreGifs,
+            gifs: gifs,
+            fetchGifs: loadMoreGifs,
           );
-    /*  */
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 //widgets
 import 'gif_item.dart';
 
-class Gifs extends StatefulWidget {
+class Gifs extends StatelessWidget {
   const Gifs({
     super.key,
     required this.gifs,
@@ -13,17 +13,12 @@ class Gifs extends StatefulWidget {
   final Function fetchGifs;
 
   @override
-  State<Gifs> createState() => _GifsState();
-}
-
-class _GifsState extends State<Gifs> {
-  @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollUpdateNotification>(
       onNotification: (notification) {
         if (notification.metrics.pixels >=
             notification.metrics.maxScrollExtent) {
-          widget.fetchGifs();
+          fetchGifs();
         }
         return false;
       },
@@ -34,10 +29,10 @@ class _GifsState extends State<Gifs> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
               ),
-              itemCount: widget.gifs.length,
+              itemCount: gifs.length,
               itemBuilder: (context, index) {
                 return GifItem(
-                  gif: widget.gifs[index],
+                  gif: gifs[index],
                 );
               },
             ),

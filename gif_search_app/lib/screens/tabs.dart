@@ -1,95 +1,59 @@
 import 'package:flutter/material.dart';
 //dependencies
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //providers
 import 'package:gif_search_app/providers/theme.dart';
+import 'package:gif_search_app/providers/gifs.dart';
 //screens
 import 'package:gif_search_app/screens/gif_search.dart';
 import 'package:gif_search_app/screens/favorites.dart';
 //widgets
 import 'package:gif_search_app/widgets/container_decoration.dart';
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedIndex = 0;
 
   TextEditingController searchController = TextEditingController();
   List<dynamic> gifs = [];
   String searchTerm = 'cat';
-  int page = 0;
-  int limit = 20;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(gifProvider.notifier).fetchGifs(searchTerm);
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _startingGifs();
-  }
-
-  void _startingGifs() {
-    _fetchGifs(searchTerm, page, limit).then((result) {
-      setState(() {
-        gifs = result;
-        page++;
-      });
-    });
-  }
-
   void _searchGifs() {
     setState(() {
-      gifs = [];
-      page = 0;
-    });
-    _fetchGifs(searchController.text, page++, limit).then((result) {
-      setState(() {
-        gifs = result;
-      });
-    });
-  }
-
-  Future<List<dynamic>> _fetchGifs(
-    String searchTerm,
-    int page,
-    int limit,
-  ) async {
-    final response = await http.get(Uri.parse(
-        'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${page * limit}'));
-    print(jsonDecode(response.body)['pagination']);
-    print(page);
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['data'];
-    } else {
-      throw Exception('Failed to load gifs');
-    }
-  }
-
-  void _loadMoreGifs() {
-    _fetchGifs(searchTerm, page, limit).then((result) {
-      setState(() {
-        gifs.addAll(result);
-        page++;
-      });
+      ref.read(gifProvider.notifier).resetGifs();
+      ref.read(gifProvider.notifier).fetchGifs(searchController.text);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final gifState = ref.watch(gifProvider);
     var activePageTitle = 'Gif Search';
     Widget activePage = GifSearchScreen(
-      gifs: gifs,
+      gifs: gifState.gifs,
       searchController: searchController,
-      loadMoreGifs: _loadMoreGifs,
+      loadMoreGifs: () {
+        ref.read(gifProvider.notifier).fetchGifs(searchTerm);
+      },
       searchGifs: _searchGifs,
     );
 
