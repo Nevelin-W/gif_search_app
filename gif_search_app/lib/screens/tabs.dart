@@ -76,6 +76,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       searchGifs: _searchGifs,
       isLoading: gifState.isLoading,
       isInitialLoad: gifState.isInitialLoad,
+      errorMessage: gifState.errorMessage,
     );
 
     if (_selectedIndex == 1) {
@@ -84,72 +85,103 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          activePageTitle,
-          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        elevation: 10,
-        centerTitle: true,
-        actions: [
-          Consumer(
-            builder: (context, ref, _) {
-              return IconButton(
-                icon: Icon(isLightTheme
-                    ? Icons.lightbulb
-                    : Icons.lightbulb_outline_rounded),
-                onPressed: () {
-                  ref.read(themeNotifierProvider.notifier).toggleTheme();
-                },
-              );
-            },
+        appBar: AppBar(
+          title: Text(
+            activePageTitle,
+            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer),
           ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(45),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 45.0,
-                  child: _selectedIndex == 0
-                      ? SearchBar(
-                          controller: searchController,
-                          hintText: 'Search',
-                          onChanged: _onSearchChanged,
-                        )
-                      : Container(),
-                ),
-              ],
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          elevation: 10,
+          centerTitle: true,
+          actions: [
+            Consumer(
+              builder: (context, ref, _) {
+                return IconButton(
+                  icon: Icon(isLightTheme
+                      ? Icons.lightbulb
+                      : Icons.lightbulb_outline_rounded),
+                  onPressed: () {
+                    ref.read(themeNotifierProvider.notifier).toggleTheme();
+                  },
+                );
+              },
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(45),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 45.0,
+                    child: _selectedIndex == 0
+                        ? SearchBar(
+                            controller: searchController,
+                            hintText: 'Search',
+                            onChanged: _onSearchChanged,
+                          )
+                        : Container(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: DecoratedContainer(child: activePage),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        unselectedItemColor: Theme.of(context).colorScheme.secondary,
-        showUnselectedLabels: true,
-        showSelectedLabels: false,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-    );
+        body: DecoratedContainer(child: activePage),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
+          unselectedItemColor: Theme.of(context).colorScheme.secondary,
+          showUnselectedLabels: true,
+          showSelectedLabels: false,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favorites',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
+        floatingActionButton: gifState.errorMessage != null
+            ? FloatingActionButton.extended(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(gifState.errorMessage!,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer)),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.errorContainer,
+                    ),
+                  );
+                },
+                label: Text(
+                  'Show Error',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer),
+                ),
+                icon: const Icon(
+                  Icons.error,
+                ),
+              )
+            : null);
   }
 }

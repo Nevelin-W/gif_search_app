@@ -11,6 +11,7 @@ class GifSearchScreen extends StatelessWidget {
     required this.searchGifs,
     required this.isLoading,
     required this.isInitialLoad,
+    required this.errorMessage,
   });
   final List<dynamic> gifs;
   final TextEditingController searchController;
@@ -18,6 +19,7 @@ class GifSearchScreen extends StatelessWidget {
   final VoidCallback searchGifs;
   final bool isLoading;
   final bool isInitialLoad;
+  final String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,16 @@ class GifSearchScreen extends StatelessWidget {
       return const Center(
         child: CircularProgressIndicator(
           strokeWidth: 2,
+        ),
+      );
+    } else if (errorMessage != null) {
+      return Center(
+        heightFactor: 30,
+        child: Text(
+          'Something went wrong :(',
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
         ),
       );
     } else if (gifs.isEmpty) {
