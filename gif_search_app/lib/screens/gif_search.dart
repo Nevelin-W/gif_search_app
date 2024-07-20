@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 //widgets
 import 'package:gif_search_app/widgets/gifs.dart';
+//models
+import 'package:gif_search_app/models/gif.dart';
 
 class GifSearchScreen extends StatelessWidget {
   const GifSearchScreen({
@@ -13,7 +15,7 @@ class GifSearchScreen extends StatelessWidget {
     required this.isInitialLoad,
     required this.errorMessage,
   });
-  final List<dynamic> gifs;
+  final List<Gif> gifs;
   final TextEditingController searchController;
   final VoidCallback loadMoreGifs;
   final VoidCallback searchGifs;

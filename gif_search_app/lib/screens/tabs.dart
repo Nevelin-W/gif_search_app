@@ -10,6 +10,8 @@ import 'package:gif_search_app/screens/gif_search.dart';
 import 'package:gif_search_app/screens/favorites.dart';
 //widgets
 import 'package:gif_search_app/widgets/container_decoration.dart';
+//models
+import 'package:gif_search_app/models/gif.dart';
 
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
@@ -21,7 +23,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedIndex = 0;
 
   TextEditingController searchController = TextEditingController();
-  List<dynamic> gifs = [];
+  List<Gif> gifs = [];
   String searchTerm = 'cat';
   Timer? _debounce;
 

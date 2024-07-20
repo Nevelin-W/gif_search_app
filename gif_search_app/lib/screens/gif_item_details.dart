@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:gif_search_app/providers/favorites.dart';
 //widgets
 import 'package:gif_search_app/widgets/container_decoration.dart';
+//models
+import 'package:gif_search_app/models/gif.dart';
 
 class GifItemDetailsScreen extends ConsumerWidget {
   const GifItemDetailsScreen({
@@ -13,7 +15,7 @@ class GifItemDetailsScreen extends ConsumerWidget {
     required this.gif,
   });
 
-  final dynamic gif;
+  final Gif gif;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +25,7 @@ class GifItemDetailsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          gif['title'],
+          gif.title,
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               color: Theme.of(context).colorScheme.onPrimaryContainer),
         ),
@@ -52,7 +54,7 @@ class GifItemDetailsScreen extends ConsumerWidget {
             Expanded(
               child: Center(
                 child: Image.network(
-                  gif['images']['fixed_height']['url'],
+                  gif.url,
                   height: double.infinity,
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
@@ -87,7 +89,7 @@ class GifItemDetailsScreen extends ConsumerWidget {
                       elevation: 5),
                   onPressed: () async {
                     await Clipboard.setData(
-                      ClipboardData(text: gif['images']['fixed_height']['url']),
+                      ClipboardData(text: gif.url),
                     );
                   },
                   child: Text(

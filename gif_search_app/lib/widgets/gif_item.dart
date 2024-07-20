@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gif_search_app/providers/favorites.dart';
 //screens
 import 'package:gif_search_app/screens/gif_item_details.dart';
+//models
+import 'package:gif_search_app/models/gif.dart';
 
 class GifItem extends ConsumerWidget {
   const GifItem({
@@ -12,7 +14,7 @@ class GifItem extends ConsumerWidget {
     super.key,
   });
 
-  final dynamic gif;
+  final Gif gif;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,7 +54,7 @@ class GifItem extends ConsumerWidget {
             );
           },
           child: Image.network(
-            gif['images']['fixed_height']['url'],
+            gif.url,
             fit: BoxFit.cover,
             loadingBuilder: (BuildContext context, Widget child,
                 ImageChunkEvent? loadingProgress) {

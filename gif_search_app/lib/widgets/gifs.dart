@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 //widgets
 import 'gif_item.dart';
+//models
+import 'package:gif_search_app/models/gif.dart';
 
 class Gifs extends StatelessWidget {
   const Gifs({
@@ -9,7 +11,7 @@ class Gifs extends StatelessWidget {
     required this.fetchGifs,
   });
 
-  final List<dynamic> gifs;
+  final List<Gif> gifs;
   final Function fetchGifs;
 
   @override
