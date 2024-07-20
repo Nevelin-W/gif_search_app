@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
 //providers
 import 'package:gif_search_app/providers/theme.dart';
 import 'package:gif_search_app/providers/gifs.dart';
@@ -22,12 +23,28 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   TextEditingController searchController = TextEditingController();
   List<dynamic> gifs = [];
   String searchTerm = 'cat';
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(gifProvider.notifier).fetchGifs(searchTerm);
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    searchTerm = value;
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _searchGifs();
     });
   }
 
@@ -57,6 +74,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         ref.read(gifProvider.notifier).fetchGifs(searchTerm);
       },
       searchGifs: _searchGifs,
+      isLoading: gifState.isLoading,
+      isInitialLoad: gifState.isInitialLoad,
     );
 
     if (_selectedIndex == 1) {
@@ -102,10 +121,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                       ? SearchBar(
                           controller: searchController,
                           hintText: 'Search',
-                          onChanged: (value) {
-                            searchTerm = value;
-                            _searchGifs();
-                          },
+                          onChanged: _onSearchChanged,
                         )
                       : Container(),
                 ),

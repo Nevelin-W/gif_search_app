@@ -9,27 +9,39 @@ class GifSearchScreen extends StatelessWidget {
     required this.searchController,
     required this.loadMoreGifs,
     required this.searchGifs,
+    required this.isLoading,
+    required this.isInitialLoad,
   });
   final List<dynamic> gifs;
   final TextEditingController searchController;
   final VoidCallback loadMoreGifs;
   final VoidCallback searchGifs;
+  final bool isLoading;
+  final bool isInitialLoad;
 
   @override
   Widget build(BuildContext context) {
-    return gifs.isEmpty
-        ? Center(
-            heightFactor: 30,
-            child: Text(
-              'Try searching for something!',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-            ),
-          )
-        : Gifs(
-            gifs: gifs,
-            fetchGifs: loadMoreGifs,
-          );
+    if (isInitialLoad && isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+        ),
+      );
+    } else if (gifs.isEmpty) {
+      return Center(
+        heightFactor: 30,
+        child: Text(
+          'Try searching for something!',
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+        ),
+      );
+    } else {
+      return Gifs(
+        gifs: gifs,
+        fetchGifs: loadMoreGifs,
+      );
+    }
   }
 }

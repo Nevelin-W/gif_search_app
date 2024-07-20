@@ -8,12 +8,18 @@ import 'package:gif_search_app/providers/favorites.dart';
 import 'package:gif_search_app/widgets/container_decoration.dart';
 
 class GifItemDetailsScreen extends ConsumerWidget {
-  const GifItemDetailsScreen({super.key, required this.gif});
+  const GifItemDetailsScreen({
+    super.key,
+    required this.gif,
+  });
+
   final dynamic gif;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesNotifier = ref.watch(favoritesNotifierProvider.notifier);
     final isFavorite = ref.watch(favoritesNotifierProvider).contains(gif);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
