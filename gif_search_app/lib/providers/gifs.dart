@@ -51,7 +51,7 @@ class GifNotifier extends StateNotifier<GifState> {
 
     try {
       final response = await http.get(Uri.parse(
-        'https://api.giphy.com/v1/gif/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${state.page * limit}',
+        'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${state.page * limit}',
       ));
       print(jsonDecode(response.body)['pagination']);
       if (response.statusCode == 200) {
