@@ -46,6 +46,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLightTheme = ref.watch(themeNotifierProvider.notifier
+        .select((themeNotifier) => themeNotifier.isLightTheme));
     final gifState = ref.watch(gifProvider);
     var activePageTitle = 'Gif Search';
     Widget activePage = GifSearchScreen(
@@ -76,7 +78,9 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
           Consumer(
             builder: (context, ref, _) {
               return IconButton(
-                icon: const Icon(Icons.lightbulb_outline_rounded),
+                icon: Icon(isLightTheme
+                    ? Icons.lightbulb
+                    : Icons.lightbulb_outline_rounded),
                 onPressed: () {
                   ref.read(themeNotifierProvider.notifier).toggleTheme();
                 },
@@ -115,7 +119,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         selectedItemColor: Theme.of(context).colorScheme.onPrimaryContainer,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
-        showUnselectedLabels: false,
+        showUnselectedLabels: true,
+        showSelectedLabels: false,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.search),

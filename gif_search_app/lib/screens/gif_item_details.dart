@@ -17,7 +17,7 @@ class GifItemDetailsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           gif['title'],
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               color: Theme.of(context).colorScheme.onPrimaryContainer),
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -40,34 +40,75 @@ class GifItemDetailsScreen extends ConsumerWidget {
       ),
       body: DecoratedContainer(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Center(
-              child: Image.network(
-                gif['images']['fixed_height']['url'],
-                fit: BoxFit.fitWidth,
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  );
-                },
+            Expanded(
+              child: Center(
+                child: Image.network(
+                  gif['images']['fixed_height']['url'],
+                  height: double.infinity,
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                ElevatedButton(onPressed: () {}, child: const Text('Download')),
-              ],
-            )
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                      elevation: 5),
+                  onPressed: () {},
+                  child: Text('Download',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                          )),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                      elevation: 5),
+                  onPressed: () {},
+                  child: Text(
+                    'Copy to Clipboard',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+              ),
+            ),
+            const Spacer(),
           ],
         ),
       ),
