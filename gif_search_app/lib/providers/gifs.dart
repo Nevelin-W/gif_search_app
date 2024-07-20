@@ -28,7 +28,7 @@ class GifNotifier extends StateNotifier<GifState> {
     final response = await http.get(Uri.parse(
       'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${state.page * limit}',
     ));
-    print(jsonDecode(response.body)['pagination']);
+    print(jsonDecode(response.body)['pagination']['count']);
 
     if (response.statusCode == 200) {
       final newGifs = jsonDecode(response.body)['data'];
@@ -37,6 +37,7 @@ class GifNotifier extends StateNotifier<GifState> {
         page: state.page + 1,
         isLoading: false,
       );
+      
     } else {
       state = state.copyWith(isLoading: false);
       throw Exception('Failed to load gifs');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 //providers
 import 'package:gif_search_app/providers/favorites.dart';
 //widgets
@@ -78,29 +79,13 @@ class GifItemDetailsScreen extends ConsumerWidget {
                       backgroundColor:
                           Theme.of(context).colorScheme.primaryContainer,
                       elevation: 5),
-                  onPressed: () {},
-                  child: Text('Download',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onTertiaryContainer,
-                          )),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primaryContainer,
-                      elevation: 5),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await Clipboard.setData(
+                      ClipboardData(text: gif['images']['fixed_height']['url']),
+                    );
+                  },
                   child: Text(
-                    'Copy to Clipboard',
+                    'Copy GIF URL to Clipboard',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
