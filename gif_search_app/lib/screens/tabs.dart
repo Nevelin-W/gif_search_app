@@ -12,6 +12,7 @@ import 'package:gif_search_app/screens/favorites.dart';
 import 'package:gif_search_app/widgets/container_decoration.dart';
 import 'package:gif_search_app/widgets/navigation_bars.dart';
 import 'package:gif_search_app/widgets/floating_action_button.dart';
+import 'package:gif_search_app/widgets/app_bar.dart';
 //models
 import 'package:gif_search_app/models/gif.dart';
 
@@ -92,51 +93,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          activePageTitle,
-          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        elevation: 10,
-        centerTitle: true,
-        actions: [
-          Consumer(
-            builder: (context, ref, _) {
-              return IconButton(
-                icon: Icon(isLightTheme
-                    ? Icons.lightbulb
-                    : Icons.lightbulb_outline_rounded),
-                onPressed: () {
-                  ref.read(themeNotifierProvider.notifier).toggleTheme();
-                },
-              );
-            },
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(45),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 45.0,
-                  child: _selectedIndex == 0
-                      ? SearchBar(
-                          controller: searchController,
-                          hintText: 'Search',
-                          onChanged: _onSearchChanged,
-                        )
-                      : Container(),
-                ),
-              ],
-            ),
-          ),
-        ),
+      appBar: TabsAppBar(
+        title: activePageTitle,
+        searchController: searchController,
+        onSearchChanged: _onSearchChanged,
+        isSearchVisible: _selectedIndex == 0,
       ),
       body: isLandscape
           ? Row(
