@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 

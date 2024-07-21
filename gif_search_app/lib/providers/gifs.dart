@@ -1,8 +1,11 @@
+//dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+//models
 import 'package:gif_search_app/models/gif.dart';
+//providers
 import 'package:gif_search_app/providers/http.dart';
 
 class GifState {
@@ -68,7 +71,7 @@ class GifNotifier extends StateNotifier<GifState> {
 
   void onSearchChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
+    _debounce = Timer(const Duration(milliseconds: 450), () {
       resetGifs();
       fetchGifs(value);
     });

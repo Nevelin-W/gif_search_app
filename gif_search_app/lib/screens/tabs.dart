@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 //dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 //providers
 import 'package:gif_search_app/providers/gifs.dart';
 //screens
 import 'package:gif_search_app/screens/gif_search.dart';
 import 'package:gif_search_app/screens/favorites.dart';
 //widgets
-import 'package:gif_search_app/widgets/container_decoration.dart';
-import 'package:gif_search_app/widgets/navigation_bars.dart';
-import 'package:gif_search_app/widgets/floating_action_button.dart';
-import 'package:gif_search_app/widgets/app_bar.dart';
+import 'package:gif_search_app/widgets/tabs_index.dart';
 //models
 import 'package:gif_search_app/models/gif.dart';
 

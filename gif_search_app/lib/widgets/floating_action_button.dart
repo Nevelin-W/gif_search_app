@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+//dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+//providers
 import 'package:gif_search_app/providers/gifs.dart';
 
 class ErrorFAB extends ConsumerWidget {
