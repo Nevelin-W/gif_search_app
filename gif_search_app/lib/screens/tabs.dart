@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 //dependencies
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:async';
+
 //providers
-import 'package:gif_search_app/providers/theme.dart';
 import 'package:gif_search_app/providers/gifs.dart';
 //screens
 import 'package:gif_search_app/screens/gif_search.dart';
@@ -28,7 +27,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   TextEditingController searchController = TextEditingController();
   List<Gif> gifs = [];
   String searchTerm = 'cat';
-  Timer? _debounce;
 
   @override
   void initState() {
@@ -41,16 +39,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   @override
   void dispose() {
     searchController.dispose();
-    _debounce?.cancel();
     super.dispose();
   }
 
   void _onSearchChanged(String value) {
-    searchTerm = value;
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      _searchGifs();
-    });
+    ref.read(gifProvider.notifier).onSearchChanged(value);
   }
 
   void _onItemTapped(int index) {
@@ -71,20 +64,24 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
-    final isLightTheme = ref.watch(themeNotifierProvider.notifier
-        .select((themeNotifier) => themeNotifier.isLightTheme));
-    final gifState = ref.watch(gifProvider);
+    final gifs = ref.watch(gifProvider.select((state) => state.gifs));
+    final isLoading = ref.watch(gifProvider.select((state) => state.isLoading));
+    final isInitialLoad =
+        ref.watch(gifProvider.select((state) => state.isInitialLoad));
+    final errorMessage =
+        ref.watch(gifProvider.select((state) => state.errorMessage));
+
     var activePageTitle = 'Gif Search';
     Widget activePage = GifSearchScreen(
-      gifs: gifState.gifs,
+      gifs: gifs,
       searchController: searchController,
       loadMoreGifs: () {
         ref.read(gifProvider.notifier).fetchGifs(searchTerm);
       },
       searchGifs: _searchGifs,
-      isLoading: gifState.isLoading,
-      isInitialLoad: gifState.isInitialLoad,
-      errorMessage: gifState.errorMessage,
+      isLoading: isLoading,
+      isInitialLoad: isInitialLoad,
+      errorMessage: errorMessage,
     );
 
     if (_selectedIndex == 1) {

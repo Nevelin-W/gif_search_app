@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 import 'dart:convert';
 import 'package:gif_search_app/models/gif.dart';
 import 'package:gif_search_app/providers/http.dart';
@@ -47,6 +48,7 @@ class GifNotifier extends StateNotifier<GifState> {
         ));
 
   final http.Client _client;
+  Timer? _debounce;
 
   static const Map<int, String> _statusCodeMessages = {
     400: 'Bad request. Please try again.',
@@ -62,6 +64,14 @@ class GifNotifier extends StateNotifier<GifState> {
   String _getErrorMessage(int statusCode) {
     return _statusCodeMessages[statusCode] ??
         'An unexpected error occurred. Please try again.';
+  }
+
+  void onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      resetGifs();
+      fetchGifs(value);
+    });
   }
 
   Future<void> fetchGifs(String searchTerm, {int limit = 20}) async {
@@ -115,6 +125,12 @@ class GifNotifier extends StateNotifier<GifState> {
       isInitialLoad: true,
       errorMessage: null,
     );
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 }
 
