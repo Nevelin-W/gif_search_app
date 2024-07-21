@@ -1,21 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+//models
+import 'package:gif_search_app/models/gif.dart';
 
 final favoritesNotifierProvider =
-    StateNotifierProvider<FavoritesNotifier, List<dynamic>>(
+    StateNotifierProvider<FavoritesNotifier, List<Gif>>(
         (ref) => FavoritesNotifier());
 
-class FavoritesNotifier extends StateNotifier<List<dynamic>> {
+class FavoritesNotifier extends StateNotifier<List<Gif>> {
   FavoritesNotifier() : super([]);
 
-  void addFavorite(dynamic gif) {
+  void addFavorite(Gif gif) {
     state = [...state, gif];
   }
 
-  void removeFavorite(dynamic gif) {
+  void removeFavorite(Gif gif) {
     state = state.where((favorite) => favorite != gif).toList();
   }
 
-  bool isFavorite(dynamic gif) {
+  bool isFavorite(Gif gif) {
     return state.contains(gif);
   }
 }

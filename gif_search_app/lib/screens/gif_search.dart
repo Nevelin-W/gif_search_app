@@ -14,6 +14,7 @@ class GifSearchScreen extends StatelessWidget {
     required this.isLoading,
     required this.isInitialLoad,
     required this.errorMessage,
+    
   });
   final List<Gif> gifs;
   final TextEditingController searchController;

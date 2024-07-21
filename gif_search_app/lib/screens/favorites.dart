@@ -13,6 +13,9 @@ class FavoritesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favorites = ref.watch(favoritesNotifierProvider);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final crossAxisCount = isLandscape ? 3 : 2;
 
     return Scaffold(
       body: DecoratedContainer(
@@ -27,8 +30,8 @@ class FavoritesScreen extends ConsumerWidget {
                 ),
               )
             : GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
                 ),
                 itemCount: favorites.length,
                 itemBuilder: (context, index) {

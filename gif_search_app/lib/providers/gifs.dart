@@ -45,6 +45,22 @@ class GifNotifier extends StateNotifier<GifState> {
           errorMessage: null,
         ));
 
+  static const Map<int, String> _statusCodeMessages = {
+    400: 'Bad request. Please try again.',
+    401: 'Unauthorized. Please check your API key.',
+    403: 'Forbidden. You do not have permission to access this resource.',
+    404: 'Not found. The requested resource could not be found.',
+    500: 'Internal server error. Please try again later.',
+    502: 'Bad gateway. The server received an invalid response.',
+    503: 'Service unavailable. Please try again later.',
+    504: 'Gateway timeout. Please try again later.',
+  };
+
+  String _getErrorMessage(int statusCode) {
+    return _statusCodeMessages[statusCode] ??
+        'An unexpected error occurred. Please try again.';
+  }
+
   Future<void> fetchGifs(String searchTerm, {int limit = 20}) async {
     if (state.isLoading) return;
 
@@ -77,7 +93,7 @@ class GifNotifier extends StateNotifier<GifState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: 'Failed to load gifs',
+          errorMessage: _getErrorMessage(response.statusCode),
         );
       }
     } catch (error) {
