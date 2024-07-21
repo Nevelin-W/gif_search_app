@@ -80,6 +80,7 @@ class GifNotifier extends StateNotifier<GifState> {
       final response = await _client.get(uri);
 
       print(jsonDecode(response.body)['pagination']);
+      print(jsonDecode(response.body)['meta']['status']);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

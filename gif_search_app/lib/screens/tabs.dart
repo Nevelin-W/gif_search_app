@@ -11,6 +11,7 @@ import 'package:gif_search_app/screens/favorites.dart';
 //widgets
 import 'package:gif_search_app/widgets/container_decoration.dart';
 import 'package:gif_search_app/widgets/navigation_bars.dart';
+import 'package:gif_search_app/widgets/floating_action_button.dart';
 //models
 import 'package:gif_search_app/models/gif.dart';
 
@@ -148,35 +149,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       bottomNavigationBar: isLandscape
           ? null
           : buildBottomNavigationBar(context, _selectedIndex, _onItemTapped),
-      floatingActionButton: gifState.errorMessage != null
-          ? FloatingActionButton.extended(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.errorContainer,
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(gifState.errorMessage!,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer)),
-                    backgroundColor:
-                        Theme.of(context).colorScheme.errorContainer,
-                  ),
-                );
-              },
-              label: Text(
-                'Show Error',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer),
-              ),
-              icon: const Icon(
-                Icons.error,
-              ),
-            )
-          : null,
+      floatingActionButton: const ErrorFAB(),
     );
   }
 }

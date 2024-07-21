@@ -15,7 +15,7 @@ class DecoratedContainer extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             Theme.of(context).colorScheme.primaryContainer,
-            Theme.of(context).colorScheme.secondaryContainer
+            Theme.of(context).colorScheme.secondaryContainer,
           ],
         ),
       ),
