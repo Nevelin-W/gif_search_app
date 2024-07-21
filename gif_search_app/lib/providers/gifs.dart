@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:gif_search_app/models/gif.dart';
+import 'package:gif_search_app/providers/http.dart';
 
 class GifState {
   GifState({
@@ -36,7 +37,7 @@ class GifState {
 }
 
 class GifNotifier extends StateNotifier<GifState> {
-  GifNotifier()
+  GifNotifier(this._client)
       : super(GifState(
           gifs: [],
           page: 0,
@@ -44,6 +45,8 @@ class GifNotifier extends StateNotifier<GifState> {
           isInitialLoad: true,
           errorMessage: null,
         ));
+
+  final http.Client _client;
 
   static const Map<int, String> _statusCodeMessages = {
     400: 'Bad request. Please try again.',
@@ -74,7 +77,7 @@ class GifNotifier extends StateNotifier<GifState> {
       final uri = Uri.parse(
         'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${state.page * limit}',
       );
-      final response = await http.get(uri);
+      final response = await _client.get(uri);
 
       print(jsonDecode(response.body)['pagination']);
 
@@ -116,6 +119,7 @@ class GifNotifier extends StateNotifier<GifState> {
 
 final gifProvider = StateNotifierProvider<GifNotifier, GifState>(
   (ref) {
-    return GifNotifier();
+    final client = ref.read(httpClientProvider);
+    return GifNotifier(client);
   },
 );
