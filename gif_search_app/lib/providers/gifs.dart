@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 //models
 import 'package:gif_search_app/models/gif.dart';
 //providers
 import 'package:gif_search_app/providers/http.dart';
+
+final giphyApiKey = dotenv.env['GIPHY_API_KEY'];
 
 class GifState {
   GifState({
@@ -88,7 +91,7 @@ class GifNotifier extends StateNotifier<GifState> {
 
     try {
       final uri = Uri.parse(
-        'https://api.giphy.com/v1/gifs/search?api_key=jBTAWdpDwFK53d1mwONTqytT9aWb0PgK&q=$searchTerm&limit=$limit&offset=${state.page * limit}',
+        'https://api.giphy.com/v1/gifs/search?api_key=$giphyApiKey&q=$searchTerm&limit=$limit&offset=${state.page * limit}',
       );
 
       final response = await _client.get(uri);
