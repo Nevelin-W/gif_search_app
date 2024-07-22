@@ -38,7 +38,7 @@ A Flutter application to search and favorite GIFs using the Giphy API.
     flutter pub get
     ```
 
-3. Create a `.env` file in the root of the project and add your Giphy API key:
+3. Add your Giphy API key to .env:
 
     ```env
     GIPHY_API_KEY=your_api_key
