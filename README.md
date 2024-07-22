@@ -1,1 +1,1 @@
-# gif_search_app
+# GIF Search App
