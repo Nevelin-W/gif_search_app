@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-// Import the files
 import 'package:gif_search_app/models/gif.dart';
 import 'package:gif_search_app/providers/favorites.dart';
 

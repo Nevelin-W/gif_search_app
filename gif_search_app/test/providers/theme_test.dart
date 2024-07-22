@@ -1,13 +1,10 @@
-// test/providers/theme_notifier_test.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gif_search_app/providers/theme.dart';
 
 void main() {
-  TestWidgetsFlutterBinding
-      .ensureInitialized(); // Ensure bindings are initialized
+  TestWidgetsFlutterBinding.ensureInitialized();
 
   group('ThemeNotifier Tests', () {
     late ProviderContainer container;
@@ -35,8 +32,8 @@ void main() {
     });
 
     test('Toggle theme back to light theme', () {
-      themeNotifier.toggleTheme(); // To dark theme
-      themeNotifier.toggleTheme(); // Back to light theme
+      themeNotifier.toggleTheme();
+      themeNotifier.toggleTheme();
       expect(themeNotifier.isLightTheme, true);
       expect(
           container.read(themeNotifierProvider).brightness, Brightness.light);
