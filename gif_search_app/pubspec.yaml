@@ -38,13 +38,15 @@ dependencies:
   google_fonts: ^6.2.1
   http: ^1.2.2
   flutter_riverpod: ^2.0.0
-  mockito: ^5.4.4
-  build_runner: ^2.1.7
+  
+  
  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^5.4.4
+  build_runner: ^2.1.7
   
   
 

@@ -10,11 +10,13 @@ class FavoritesNotifier extends StateNotifier<List<Gif>> {
   FavoritesNotifier() : super([]);
 
   void addFavorite(Gif gif) {
-    state = [...state, gif];
+    if (!state.contains(gif)) {
+      state = [...state, gif];
+    }
   }
 
   void removeFavorite(Gif gif) {
-    state = state.where((favorite) => favorite != gif).toList();
+    state = state.where((favorite) => favorite.id != gif.id).toList();
   }
 
   bool isFavorite(Gif gif) {
